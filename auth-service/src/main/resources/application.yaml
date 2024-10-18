@@ -1,0 +1,16 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /auth
+spring:
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/auth_service"
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+  application:
+    name: auth-service
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
