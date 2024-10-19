@@ -3,6 +3,7 @@ import com.ecommerce.auth_service.dto.APIResponse;
 import com.ecommerce.auth_service.dto.request.UserCreateRequest;
 import com.ecommerce.auth_service.dto.request.UserUpdateRequest;
 import com.ecommerce.auth_service.dto.response.UserResponse;
+import com.ecommerce.auth_service.service.UserService;
 import com.ecommerce.auth_service.service.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -20,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
-    UserServiceImpl userServiceImpl;
+    UserService userServiceImpl;
 
     @PostMapping
     public ResponseEntity<APIResponse<UserResponse>> createUser(@RequestBody @Valid UserCreateRequest userCreateRequest){
