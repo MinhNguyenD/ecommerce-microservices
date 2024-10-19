@@ -1,31 +1,15 @@
 package com.ecommerce.auth_service.service;
 
-
 import com.ecommerce.auth_service.dto.request.UserCreateRequest;
-import com.ecommerce.auth_service.entity.User;
-import com.ecommerce.auth_service.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.ecommerce.auth_service.dto.request.UserUpdateRequest;
+import com.ecommerce.auth_service.dto.response.UserResponse;
 
 import java.util.List;
 
-@Service
-public class UserService {
-    @Autowired
-    private UserRepository userRepository;
-
-    public User createUser(UserCreateRequest userCreateRequest){
-        User user = new User();
-        user.setFirstName(userCreateRequest.getFirstName());
-        user.setLastName(userCreateRequest.getLastName());
-        user.setUsername(userCreateRequest.getUsername());
-        user.setPassword(userCreateRequest.getPassword());
-        user.setDateOfBirth(userCreateRequest.getDateOfBirth());
-        userRepository.save(user);
-        return user;
-    }
-
-    public List<User> getUsers(){
-        return userRepository.findAll();
-    }
+public interface UserService {
+    UserResponse createUser(UserCreateRequest userCreateRequest);
+    List<UserResponse> getUsers();
+    UserResponse getUser(String userId);
+    UserResponse updateUser(String userID, UserUpdateRequest userUpdateRequest);
+    void deleteUser(String userId);
 }

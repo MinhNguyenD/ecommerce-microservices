@@ -1,18 +1,17 @@
 package com.ecommerce.auth_service.dto.request;
 
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
-
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserCreateRequest {
-    String username;
+public class UserUpdateRequest {
     String password;
     String firstName;
     String lastName;
