@@ -1,8 +1,10 @@
 package com.ecommerce.auth_service.controller;
+import com.ecommerce.auth_service.dto.APIResponse;
 import com.ecommerce.auth_service.dto.request.UserCreateRequest;
 import com.ecommerce.auth_service.dto.request.UserUpdateRequest;
 import com.ecommerce.auth_service.dto.response.UserResponse;
 import com.ecommerce.auth_service.service.UserServiceImpl;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,28 +23,43 @@ public class UserController {
     UserServiceImpl userServiceImpl;
 
     @PostMapping
-    public ResponseEntity<UserResponse> createUser(@RequestBody UserCreateRequest userCreateRequest){
-        return new ResponseEntity<>(userServiceImpl.createUser(userCreateRequest), HttpStatus.CREATED);
+    public ResponseEntity<APIResponse<UserResponse>> createUser(@RequestBody @Valid UserCreateRequest userCreateRequest){
+        return ResponseEntity.status(HttpStatus.CREATED).body(APIResponse.<UserResponse>builder()
+                .success(true)
+                .data(userServiceImpl.createUser(userCreateRequest))
+                .build());
     }
 
     @GetMapping
-    public ResponseEntity<List<UserResponse>> getAllUsers(){
-        return new ResponseEntity<>(userServiceImpl.getUsers(), HttpStatus.OK);
+    public ResponseEntity<APIResponse<List<UserResponse>>> getAllUsers(){
+        return ResponseEntity.ok(APIResponse.<List<UserResponse>>builder()
+                .success(true)
+                .data(userServiceImpl.getUsers())
+                .build());
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserResponse> getUser(@PathVariable String userId){
-        return new ResponseEntity<>(userServiceImpl.getUser(userId), HttpStatus.OK);
+    public ResponseEntity<APIResponse<UserResponse>> getUser(@PathVariable String userId){
+        return ResponseEntity.ok(APIResponse.<UserResponse>builder()
+                .success(true)
+                .data(userServiceImpl.getUser(userId))
+                .build());
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable String userId, @RequestBody UserUpdateRequest userUpdateRequest){
-        return new ResponseEntity<>(userServiceImpl.updateUser(userId, userUpdateRequest), HttpStatus.OK);
+    public ResponseEntity<APIResponse<UserResponse>> updateUser(@PathVariable String userId, @RequestBody @Valid UserUpdateRequest userUpdateRequest){
+        return ResponseEntity.ok(APIResponse.<UserResponse>builder()
+                .success(true)
+                .data(userServiceImpl.updateUser(userId, userUpdateRequest))
+                .build());
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable String userId){
+    public ResponseEntity<APIResponse> deleteUser(@PathVariable String userId){
         userServiceImpl.deleteUser(userId);
-        return new ResponseEntity<>("Deleted user with id " + userId, HttpStatus.OK);
+        return ResponseEntity.ok(APIResponse.<UserResponse>builder()
+                .success(true)
+                .message("Deleted user with id " + userId)
+                .build());
     }
  }
