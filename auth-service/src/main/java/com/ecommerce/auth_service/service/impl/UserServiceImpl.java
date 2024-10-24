@@ -1,4 +1,4 @@
-package com.ecommerce.auth_service.service;
+package com.ecommerce.auth_service.service.impl;
 
 
 import com.ecommerce.auth_service.dto.request.UserCreateRequest;
@@ -9,6 +9,7 @@ import com.ecommerce.auth_service.exception.AppException;
 import com.ecommerce.auth_service.exception.ErrorCode;
 import com.ecommerce.auth_service.mapper.UserMapper;
 import com.ecommerce.auth_service.repository.UserRepository;
+import com.ecommerce.auth_service.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
