@@ -25,42 +25,26 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<APIResponse<UserResponse>> createUser(@RequestBody @Valid UserCreateRequest userCreateRequest){
-        return ResponseEntity.status(HttpStatus.CREATED).body(APIResponse.<UserResponse>builder()
-                .success(true)
-                .data(userServiceImpl.createUser(userCreateRequest))
-                .build());
+        return ResponseEntity.status(HttpStatus.CREATED).body(APIResponse.success(userServiceImpl.createUser(userCreateRequest)));
     }
 
     @GetMapping
     public ResponseEntity<APIResponse<List<UserResponse>>> getAllUsers(){
-        return ResponseEntity.ok(APIResponse.<List<UserResponse>>builder()
-                .success(true)
-                .data(userServiceImpl.getUsers())
-                .build());
+        return ResponseEntity.ok(APIResponse.success(userServiceImpl.getUsers()));
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<APIResponse<UserResponse>> getUser(@PathVariable String userId){
-        return ResponseEntity.ok(APIResponse.<UserResponse>builder()
-                .success(true)
-                .data(userServiceImpl.getUser(userId))
-                .build());
+        return ResponseEntity.ok(APIResponse.success(userServiceImpl.getUser(userId)));
     }
 
     @PutMapping("/{userId}")
     public ResponseEntity<APIResponse<UserResponse>> updateUser(@PathVariable String userId, @RequestBody @Valid UserUpdateRequest userUpdateRequest){
-        return ResponseEntity.ok(APIResponse.<UserResponse>builder()
-                .success(true)
-                .data(userServiceImpl.updateUser(userId, userUpdateRequest))
-                .build());
+        return ResponseEntity.ok(APIResponse.success(userServiceImpl.updateUser(userId, userUpdateRequest)));
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<APIResponse> deleteUser(@PathVariable String userId){
-        userServiceImpl.deleteUser(userId);
-        return ResponseEntity.ok(APIResponse.<UserResponse>builder()
-                .success(true)
-                .message("Deleted user with id " + userId)
-                .build());
+        return ResponseEntity.ok(APIResponse.success(userServiceImpl.deleteUser(userId)));
     }
  }

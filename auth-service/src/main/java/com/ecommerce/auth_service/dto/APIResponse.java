@@ -15,4 +15,20 @@ public class APIResponse<T> {
     boolean success;
     String message;
     T data;
+
+    public static <T> APIResponse<T> success(T data){
+        return APIResponse.<T>builder()
+                .success(true)
+                .message("Successful")
+                .data(data)
+                .build();
+    }
+
+    public static <T> APIResponse<T> error(T data){
+        return APIResponse.<T>builder()
+                .success(false)
+                .message("Error")
+                .data(data)
+                .build();
+    }
 }

@@ -28,19 +28,11 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<APIResponse<AuthenticationResponse>> register(@RequestBody RegisterRequest registerRequest){
-        return ResponseEntity.ok(APIResponse.<AuthenticationResponse>builder()
-                .success(true)
-                .message("Register successful")
-                .data(authenticationService.register(registerRequest))
-                .build());
+        return ResponseEntity.ok(APIResponse.success(authenticationService.register(registerRequest)));
     }
 
     @PostMapping("/login")
     public ResponseEntity<APIResponse<AuthenticationResponse>> login(@RequestBody LoginRequest loginRequest){
-        return ResponseEntity.ok(APIResponse.<AuthenticationResponse>builder()
-                .success(true)
-                .message("Login successful")
-                .data(authenticationService.authenticate(loginRequest))
-                .build());
+        return ResponseEntity.ok(APIResponse.success(authenticationService.authenticate(loginRequest)));
     }
 }

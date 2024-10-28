@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
 @OpenAPIDefinition(
         servers = {
                 @Server(
-                        url = "http://localhost:8080/auth",
+                        url = "http://localhost:8080/identity",
                         description = "DEV environment"
                 )
         },
