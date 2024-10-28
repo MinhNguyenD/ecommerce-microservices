@@ -4,6 +4,7 @@ import com.ecommerce.auth_service.dto.request.UserCreateRequest;
 import com.ecommerce.auth_service.dto.request.UserUpdateRequest;
 import com.ecommerce.auth_service.dto.response.UserResponse;
 import com.ecommerce.auth_service.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequestMapping(value="/api/v1/users")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "User", description = "User Endpoints")
 public class UserController {
     UserService userServiceImpl;
 

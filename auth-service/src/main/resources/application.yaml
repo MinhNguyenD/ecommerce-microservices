@@ -1,7 +1,7 @@
 server:
   port: 8080
   servlet:
-    context-path: /auth
+    context-path: /identity
 spring:
   datasource:
     url: "jdbc:postgresql://localhost:5432/auth_service"
@@ -9,10 +9,15 @@ spring:
     password: root
     driver-class-name: org.postgresql.Driver
   application:
-    name: auth-service
+    name: identity-service
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-  jwt:
-    signKey: "Ntshn69BGsgBsLUhuqmTg9LI+YNKRzvzSz9BUVpLqpvEpCz4AbNqkx4Xk2HejaPM"
+jwt:
+  signKey: "Ntshn69BGsgBsLUhuqmTg9LI+YNKRzvzSz9BUVpLqpvEpCz4AbNqkx4Xk2HejaPM"
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
