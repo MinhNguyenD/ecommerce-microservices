@@ -3,6 +3,7 @@ package com.ecommerce.auth_service.service.impl;
 
 import com.ecommerce.auth_service.dto.request.UserCreateRequest;
 import com.ecommerce.auth_service.dto.request.UserUpdateRequest;
+import com.ecommerce.auth_service.dto.response.PageResponse;
 import com.ecommerce.auth_service.dto.response.UserResponse;
 import com.ecommerce.auth_service.entity.User;
 import com.ecommerce.auth_service.exception.AppException;
@@ -14,6 +15,9 @@ import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,8 +36,17 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    public List<UserResponse> getUsers(){
-        return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
+    public PageResponse<UserResponse> getUsers(int pageNum, int pageSize){
+        Pageable pageable = PageRequest.of(pageNum -1, pageSize);
+        Page<User> usersPage = userRepository.findAll(pageable);
+        List<UserResponse> usersList = usersPage.getContent().stream().map(userMapper::toUserResponse).toList();
+        return PageResponse.<UserResponse> builder()
+                .currentPage(pageNum)
+                .pageSize(usersPage.getSize())
+                .totalPages(usersPage.getTotalPages())
+                .totalElements(usersPage.getTotalElements())
+                .data(usersList)
+                .build();
     }
 
     public UserResponse getUser(String userId){

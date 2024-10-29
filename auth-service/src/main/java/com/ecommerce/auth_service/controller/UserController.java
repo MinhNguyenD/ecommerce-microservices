@@ -2,6 +2,7 @@ package com.ecommerce.auth_service.controller;
 import com.ecommerce.auth_service.dto.APIResponse;
 import com.ecommerce.auth_service.dto.request.UserCreateRequest;
 import com.ecommerce.auth_service.dto.request.UserUpdateRequest;
+import com.ecommerce.auth_service.dto.response.PageResponse;
 import com.ecommerce.auth_service.dto.response.UserResponse;
 import com.ecommerce.auth_service.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,22 +25,22 @@ public class UserController {
     UserService userServiceImpl;
 
     @PostMapping
-    public ResponseEntity<APIResponse<UserResponse>> createUser(@RequestBody @Valid UserCreateRequest userCreateRequest){
+    public ResponseEntity<APIResponse> createUser(@RequestBody @Valid UserCreateRequest userCreateRequest){
         return ResponseEntity.status(HttpStatus.CREATED).body(APIResponse.success(userServiceImpl.createUser(userCreateRequest)));
     }
 
     @GetMapping
-    public ResponseEntity<APIResponse<List<UserResponse>>> getAllUsers(){
-        return ResponseEntity.ok(APIResponse.success(userServiceImpl.getUsers()));
+    public ResponseEntity<APIResponse> getAllUsers(@RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum , @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize){
+        return ResponseEntity.ok(APIResponse.success(userServiceImpl.getUsers(pageNum, pageSize)));
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<APIResponse<UserResponse>> getUser(@PathVariable String userId){
+    public ResponseEntity<APIResponse> getUser(@PathVariable String userId){
         return ResponseEntity.ok(APIResponse.success(userServiceImpl.getUser(userId)));
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<APIResponse<UserResponse>> updateUser(@PathVariable String userId, @RequestBody @Valid UserUpdateRequest userUpdateRequest){
+    public ResponseEntity<APIResponse> updateUser(@PathVariable String userId, @RequestBody @Valid UserUpdateRequest userUpdateRequest){
         return ResponseEntity.ok(APIResponse.success(userServiceImpl.updateUser(userId, userUpdateRequest)));
     }
 
