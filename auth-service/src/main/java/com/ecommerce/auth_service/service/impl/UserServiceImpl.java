@@ -31,16 +31,18 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     UserMapper userMapper;
 
-    public UserResponse createUser(UserCreateRequest userCreateRequest){
+    @Override
+    public UserResponse createUser(UserCreateRequest userCreateRequest) {
         User user = userMapper.toUser(userCreateRequest);
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    public PageResponse<UserResponse> getUsers(int pageNum, int pageSize){
-        Pageable pageable = PageRequest.of(pageNum -1, pageSize);
+    @Override
+    public PageResponse<UserResponse> getUsers(int pageNum, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNum - 1, pageSize);
         Page<User> usersPage = userRepository.findAll(pageable);
         List<UserResponse> usersList = usersPage.getContent().stream().map(userMapper::toUserResponse).toList();
-        return PageResponse.<UserResponse> builder()
+        return PageResponse.<UserResponse>builder()
                 .currentPage(pageNum)
                 .pageSize(usersPage.getSize())
                 .totalPages(usersPage.getTotalPages())
@@ -49,16 +51,20 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    public UserResponse getUser(String userId){
+    @Override
+    public UserResponse getUser(String userId) {
         return userMapper.toUserResponse(userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
     }
-    public UserResponse updateUser(String userID, UserUpdateRequest userUpdateRequest){
+
+    @Override
+    public UserResponse updateUser(String userID, UserUpdateRequest userUpdateRequest) {
         User user = userRepository.findById(userID).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         userMapper.updateUser(user, userUpdateRequest);
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    public String deleteUser(String userId){
+    @Override
+    public String deleteUser(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         userRepository.delete(user);
         return "Deleted user with id " + userId;
