@@ -1,16 +1,14 @@
-package com.ecommerce.auth_service.dto.response;
-
+package com.ecommerce.auth_service.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthenticationResponse {
-    boolean authenticated;
+public class RefreshRequest {
     String accessToken;
     String refreshToken;
 }

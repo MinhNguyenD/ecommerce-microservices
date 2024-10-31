@@ -1,5 +1,6 @@
 package com.ecommerce.auth_service.configuration.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,9 @@ public class SecurityConfiguration {
             "/api/v1/auth/**", "/introspect", "/logout", "/refresh","/swagger-ui.html", "/swagger-ui/**", "/api-docs/**"
     };
 
+    @Autowired
+    private AppJWTDecoder appJWTDecoder;
+
     @Value("${jwt.signKey}")
     private String SIGN_KEY;
 
@@ -51,20 +55,11 @@ public class SecurityConfiguration {
 
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
                 .jwtAuthenticationConverter(jwtConverter()) // this to customize the JWT prefix
-                .decoder(jwtDecoder())));
+                .decoder(appJWTDecoder)));
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
 
         return httpSecurity.build();
-    }
-
-    @Bean
-    JwtDecoder jwtDecoder(){
-        SecretKeySpec secretKeySpec = new SecretKeySpec(SIGN_KEY.getBytes(), "HS512");
-        return NimbusJwtDecoder
-                .withSecretKey(secretKeySpec)
-                .macAlgorithm(MacAlgorithm.HS512)
-                .build();
     }
 
     @Bean
