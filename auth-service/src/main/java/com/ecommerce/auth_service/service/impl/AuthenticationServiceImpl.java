@@ -1,11 +1,14 @@
 package com.ecommerce.auth_service.service.impl;
+import com.ecommerce.auth_service.constant.PredefinedRole;
 import com.ecommerce.auth_service.dto.request.LoginRequest;
 import com.ecommerce.auth_service.dto.request.RegisterRequest;
 import com.ecommerce.auth_service.dto.response.AuthenticationResponse;
+import com.ecommerce.auth_service.entity.Role;
 import com.ecommerce.auth_service.entity.User;
 import com.ecommerce.auth_service.exception.AppException;
 import com.ecommerce.auth_service.exception.ErrorCode;
 import com.ecommerce.auth_service.mapper.UserMapper;
+import com.ecommerce.auth_service.repository.RoleRepository;
 import com.ecommerce.auth_service.repository.UserRepository;
 import com.ecommerce.auth_service.service.AuthenticationService;
 import com.nimbusds.jose.*;
@@ -25,6 +28,8 @@ import java.security.GeneralSecurityException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 // create constructor that has all "final" and non-null fields
@@ -36,6 +41,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     PasswordEncoder passwordEncoder;
     UserRepository userRepository;
     UserMapper userMapper;
+    RoleRepository roleRepository;
     @NonFinal
     @Value("${jwt.signKey}")
     String SIGN_KEY;
@@ -56,6 +62,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if(userExists) throw new AppException(ErrorCode.USER_EXISTED);
         User user = userMapper.toUser(registerRequest);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Set<Role> roles = new HashSet<>();
+        Role userRole = roleRepository.findById(PredefinedRole.USER_ROLE).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+        roles.add(userRole);
+        user.setRoles(roles);
         userRepository.save(user);
         String jwtToken = generateJwtToken(user.getUsername());
         return AuthenticationResponse.builder()

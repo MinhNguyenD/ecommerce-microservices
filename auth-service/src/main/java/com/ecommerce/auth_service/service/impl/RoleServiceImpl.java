@@ -7,6 +7,7 @@ import com.ecommerce.auth_service.entity.Role;
 import com.ecommerce.auth_service.exception.AppException;
 import com.ecommerce.auth_service.exception.ErrorCode;
 import com.ecommerce.auth_service.mapper.RoleMapper;
+import com.ecommerce.auth_service.repository.PermissionRepository;
 import com.ecommerce.auth_service.repository.RoleRepository;
 import com.ecommerce.auth_service.service.RoleService;
 import jakarta.transaction.Transactional;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -24,6 +26,7 @@ import java.util.List;
 public class RoleServiceImpl implements RoleService {
     RoleRepository roleRepository;
     RoleMapper roleMapper;
+    PermissionRepository permissionRepository;
 
     @Override
     public RoleResponse getRole(String name) {
@@ -39,14 +42,20 @@ public class RoleServiceImpl implements RoleService {
     public RoleResponse createRole(RoleRequest createRequest) {
         boolean roleExists = roleRepository.findById(createRequest.getName()).isPresent();
         if (roleExists) throw new AppException(ErrorCode.ROLE_EXISTED);
-        return roleMapper.toRoleResponse(roleRepository.save(roleMapper.toRole(createRequest)));
-
+        Role role = roleMapper.toRole(createRequest);
+        List<Permission> permissions = permissionRepository.findAllById(createRequest.getPermissions());
+        role.setPermissions(new HashSet<>(permissions));
+        roleRepository.save(role);
+        return roleMapper.toRoleResponse(role);
     }
 
     @Override
     public RoleResponse updateRole(RoleRequest updateRequest) {
         Role role = roleRepository.findById(updateRequest.getName()).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
         roleMapper.updateRole(role, updateRequest);
+        List<Permission> permissions = permissionRepository.findAllById(updateRequest.getPermissions());
+        role.setPermissions(new HashSet<>(permissions));
+        roleRepository.save(role);
         return roleMapper.toRoleResponse(role);
     }
 

@@ -27,6 +27,6 @@ public class User {
     String lastName;
     LocalDate dateOfBirth;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     Set<Role> roles;
 }
