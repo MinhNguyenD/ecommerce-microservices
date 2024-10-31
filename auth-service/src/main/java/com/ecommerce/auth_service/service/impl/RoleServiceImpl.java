@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -29,16 +30,19 @@ public class RoleServiceImpl implements RoleService {
     PermissionRepository permissionRepository;
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public RoleResponse getRole(String name) {
         return roleMapper.toRoleResponse(roleRepository.findById(name).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED)));
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public List<RoleResponse> getRoles() {
         return roleRepository.findAll().stream().map(roleMapper::toRoleResponse).toList();
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public RoleResponse createRole(RoleRequest createRequest) {
         boolean roleExists = roleRepository.findById(createRequest.getName()).isPresent();
         if (roleExists) throw new AppException(ErrorCode.ROLE_EXISTED);
@@ -50,6 +54,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public RoleResponse updateRole(RoleRequest updateRequest) {
         Role role = roleRepository.findById(updateRequest.getName()).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
         roleMapper.updateRole(role, updateRequest);
@@ -60,6 +65,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteRole(String name) {
         Role role = roleRepository.findById(name).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
         roleRepository.delete(role);

@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +54,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasAuthority('UPDATE_POST')")  // example of permission
     public PageResponse<UserResponse> getUsers(int pageNum, int pageSize) {
         Pageable pageable = PageRequest.of(pageNum - 1, pageSize);
         Page<User> usersPage = userRepository.findAll(pageable);
@@ -67,12 +70,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public UserResponse getUser(String userId) {
         var user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         return userMapper.toUserResponse(user);
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public UserResponse updateUser(String userID, UserUpdateRequest userUpdateRequest) {
         User user = userRepository.findById(userID).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         userMapper.updateUser(user, userUpdateRequest);
@@ -83,6 +88,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteUser(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         userRepository.delete(user);

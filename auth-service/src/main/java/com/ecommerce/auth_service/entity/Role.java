@@ -19,6 +19,6 @@ public class Role {
     String name;
     String description;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     Set<Permission> permissions;
 }

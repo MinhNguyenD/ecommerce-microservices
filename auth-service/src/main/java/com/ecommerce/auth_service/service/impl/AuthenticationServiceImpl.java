@@ -30,6 +30,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.StringJoiner;
 
 @Service
 // create constructor that has all "final" and non-null fields
@@ -50,7 +51,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         boolean authenticated = passwordEncoder.matches(loginRequest.getPassword(), user.getPassword());
         if(!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
-        String jwtToken = generateJwtToken(user.getUsername());
+        String jwtToken = generateJwtToken(user);
         return AuthenticationResponse.builder()
                 .authenticated(true)
                 .token(jwtToken)
@@ -67,20 +68,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         roles.add(userRole);
         user.setRoles(roles);
         userRepository.save(user);
-        String jwtToken = generateJwtToken(user.getUsername());
+        String jwtToken = generateJwtToken(user);
         return AuthenticationResponse.builder()
                 .authenticated(true)
                 .token(jwtToken)
                 .build();
     }
 
-    private String generateJwtToken(String username){
+    private String generateJwtToken(User user){
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(username)
+                .subject(user.getUsername())
                 .issuer("ecommerce.com")
                 .expirationTime(new Date(Instant.now().plus(7, ChronoUnit.DAYS).toEpochMilli()))
-//                .claim("customClaim", "custom value")
+                .claim("scope", buildAuthScope(user))
                 .build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
@@ -94,5 +95,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             log.error("Error creating jwt token");
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * create a scope (which is jwt identifier of authorization in OAuth2)
+     * @param user: authenticated user that have roles attached
+     * @return scope String which is in this format "ROLE_ROLE1 PERMISSION1 ROLE_ROLE2 PERMISSION1 PERMISSION2"
+     */
+    private String buildAuthScope(User user){
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        var roles = user.getRoles();
+        if(roles.isEmpty()) return "";
+        for(var role : roles){
+            stringJoiner.add("ROLE_" + role.getName());
+            var permissions = role.getPermissions();
+            if(permissions.isEmpty()) continue;
+            permissions.forEach(permission -> stringJoiner.add(permission.getName()));
+        }
+        log.info(stringJoiner.toString());
+        return stringJoiner.toString();
     }
 }
