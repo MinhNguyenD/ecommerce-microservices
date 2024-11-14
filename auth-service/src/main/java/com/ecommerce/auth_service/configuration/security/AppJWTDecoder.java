@@ -1,5 +1,6 @@
 package com.ecommerce.auth_service.configuration.security;
 
+import com.ecommerce.auth_service.dto.request.IntrospectRequest;
 import com.ecommerce.auth_service.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +26,7 @@ public class AppJWTDecoder implements JwtDecoder {
 
     @Override
     public Jwt decode(String token) throws JwtException {
-        boolean isValid = authenticationService.introspect(token);
+        boolean isValid = authenticationService.introspect(IntrospectRequest.builder().token(token).build()).isValid();
         if(!isValid){
             throw new JwtException("Token is invalid");
         }

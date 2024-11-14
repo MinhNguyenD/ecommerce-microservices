@@ -1,11 +1,9 @@
 package com.ecommerce.auth_service.service.impl;
 
 import com.ecommerce.auth_service.constant.PredefinedRole;
-import com.ecommerce.auth_service.dto.request.LoginRequest;
-import com.ecommerce.auth_service.dto.request.LogoutRequest;
-import com.ecommerce.auth_service.dto.request.RefreshRequest;
-import com.ecommerce.auth_service.dto.request.RegisterRequest;
+import com.ecommerce.auth_service.dto.request.*;
 import com.ecommerce.auth_service.dto.response.AuthenticationResponse;
+import com.ecommerce.auth_service.dto.response.IntrospectResponse;
 import com.ecommerce.auth_service.dto.response.RefreshTokenResponse;
 import com.ecommerce.auth_service.entity.InvalidatedToken;
 import com.ecommerce.auth_service.entity.Role;
@@ -116,13 +114,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         SecurityContextHolder.getContext().setAuthentication(null);
     }
 
-    public boolean introspect(String token){
+    public IntrospectResponse introspect(IntrospectRequest request){
         try{
-            verifyToken(token);
+            verifyToken(request.getToken());
         } catch (Exception e) {
-            return false;
+            return IntrospectResponse.builder()
+                    .valid(false)
+                    .build();
         }
-        return true;
+        return IntrospectResponse.builder()
+                .valid(true)
+                .build();
     }
 
     private void invalidateToken(SignedJWT signedJWT) throws ParseException {

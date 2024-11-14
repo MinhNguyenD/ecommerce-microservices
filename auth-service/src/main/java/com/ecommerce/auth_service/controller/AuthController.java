@@ -1,11 +1,9 @@
 package com.ecommerce.auth_service.controller;
 
 import com.ecommerce.auth_service.dto.APIResponse;
-import com.ecommerce.auth_service.dto.request.LoginRequest;
-import com.ecommerce.auth_service.dto.request.LogoutRequest;
-import com.ecommerce.auth_service.dto.request.RefreshRequest;
-import com.ecommerce.auth_service.dto.request.RegisterRequest;
+import com.ecommerce.auth_service.dto.request.*;
 import com.ecommerce.auth_service.dto.response.AuthenticationResponse;
+import com.ecommerce.auth_service.dto.response.IntrospectResponse;
 import com.ecommerce.auth_service.dto.response.RefreshTokenResponse;
 import com.ecommerce.auth_service.service.AuthenticationService;
 import com.ecommerce.auth_service.service.UserService;
@@ -35,6 +33,12 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<APIResponse<AuthenticationResponse>> register(@RequestBody RegisterRequest registerRequest){
         return ResponseEntity.ok(APIResponse.success(authenticationService.register(registerRequest)));
+    }
+
+    @PostMapping("/introspect")
+    public ResponseEntity<APIResponse<IntrospectResponse>> introspect(@RequestBody IntrospectRequest request)
+            throws ParseException, JOSEException {
+        return ResponseEntity.ok(APIResponse.success(authenticationService.introspect(request)));
     }
 
     @PostMapping("/login")
