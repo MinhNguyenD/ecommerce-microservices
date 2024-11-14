@@ -48,12 +48,9 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-
-    defaults: 
-      run: 
-        working-directory: auth-service
         
     needs: build
+    
     steps:
      -
         name: Set up QEMU
@@ -71,6 +68,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v6
         with:
+          directory: auth-service
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/auth-service-ecom:latest
     
