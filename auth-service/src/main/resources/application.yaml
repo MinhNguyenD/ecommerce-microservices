@@ -4,7 +4,7 @@ server:
     context-path: /identity
 spring:
   datasource:
-    url: "jdbc:postgresql://localhost:5432/auth_service"
+    url: "jdbc:postgresql://postgresql:5432/auth_service"
     username: postgres
     password: root
     driver-class-name: org.postgresql.Driver
