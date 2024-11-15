@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @Builder
@@ -20,5 +22,6 @@ public class Product {
     String description;
     double price;
     int quantity;
-    String category;
+    @ManyToMany(fetch = FetchType.LAZY)
+    Set<Category> categories;
 }

@@ -14,8 +14,6 @@ import lombok.experimental.FieldDefaults;
 @Table(name = "\"category\"")
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
     String name;
     String description;
 }

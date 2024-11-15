@@ -1,8 +1,7 @@
 package com.ecommerce.product_service.exception;
 
-
-import com.ecommerce.auth_service.dto.APIResponse;
-import com.ecommerce.auth_service.dto.response.ErrorResponse;
+import com.ecommerce.product_service.dto.APIResponse;
+import com.ecommerce.product_service.dto.response.ErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
