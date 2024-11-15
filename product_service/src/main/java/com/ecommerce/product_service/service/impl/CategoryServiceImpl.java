@@ -17,12 +17,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CategoryServiceImpl implements CategoryService {
     CategoryRepository categoryRepository;
     CategoryMapper categoryMapper;
     @Override
     public CategoryResponse createCategory(CategoryRequest categoryRequest) {
+        boolean categoryExists = categoryRepository.findById(categoryRequest.getName()).isPresent();
+        if(categoryExists) throw new AppException(ErrorCode.CATEGORY_EXISTED);
         Category category = categoryRepository.save(categoryMapper.toCategory(categoryRequest));
         return categoryMapper.toCategoryResponse(category);
     }

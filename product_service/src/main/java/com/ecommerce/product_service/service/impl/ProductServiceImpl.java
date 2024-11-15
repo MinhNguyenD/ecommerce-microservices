@@ -25,7 +25,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductServiceImpl implements ProductService {
     ProductMapper productMapper;
     ProductRepository productRepository;
@@ -54,19 +54,26 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse createProduct(ProductRequest productRequest) {
         Product product = productMapper.toProduct(productRequest);
-        productRepository.save(product);
-        return productMapper.toProductResponse(product);
-    }
-
-    @Override
-    public ProductResponse updateProduct(ProductRequest productRequest) {
-        Product product = productMapper.toProduct(productRequest);
         Set<Category> categories = new HashSet<>();
         for(String categoryId : productRequest.getCategoryIds()){
             Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXISTED));
             categories.add(category);
         }
         product.setCategories(categories);
+        productRepository.save(product);
+        return productMapper.toProductResponse(product);
+    }
+
+    @Override
+    public ProductResponse updateProduct(String id, ProductRequest productRequest) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
+        Set<Category> categories = new HashSet<>();
+        for(String categoryId : productRequest.getCategoryIds()){
+            Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_EXISTED));
+            categories.add(category);
+        }
+        product.setCategories(categories);
+        productMapper.updateProduct(product, productRequest);
         productRepository.save(product);
         return productMapper.toProductResponse(product);
     }

@@ -10,6 +10,6 @@ public interface ProductService {
     ProductResponse getProduct(String id);
     PageResponse<ProductResponse> getProducts(int pageNum, int pageSize);
     ProductResponse createProduct(ProductRequest productRequest);
-    ProductResponse updateProduct(ProductRequest productRequest);
+    ProductResponse updateProduct(String id, ProductRequest productRequest);
     String deleteProduct(String id);
 }

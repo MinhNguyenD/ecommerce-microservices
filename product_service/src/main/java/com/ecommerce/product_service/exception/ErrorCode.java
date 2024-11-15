@@ -19,7 +19,7 @@ public enum ErrorCode {
     PRODUCT_EXISTED(1013, "Product existed", HttpStatus.BAD_REQUEST),
     CATEGORY_EXISTED(1014, "Category existed", HttpStatus.BAD_REQUEST),
     PRODUCT_NOT_EXISTED(1015, "Product not existed", HttpStatus.BAD_REQUEST),
-    CATEGORY_NOT_EXISTED(1015, "Product not existed", HttpStatus.BAD_REQUEST);
+    CATEGORY_NOT_EXISTED(1015, "Category not existed", HttpStatus.BAD_REQUEST);
 
 
 

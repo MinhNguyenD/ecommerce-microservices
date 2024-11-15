@@ -14,12 +14,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@RequestMapping(value="api/v1/products")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductController {
     ProductService productService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<APIResponse<ProductResponse>> getProduct(String id) {
+    public ResponseEntity<APIResponse<ProductResponse>> getProduct(@PathVariable String id) {
         return ResponseEntity.ok(APIResponse.success(productService.getProduct(id)));
     }
 
@@ -34,13 +35,13 @@ public class ProductController {
         return ResponseEntity.ok(APIResponse.success(productService.createProduct(productRequest)));
     }
 
-    @PutMapping
-    public ResponseEntity<APIResponse<ProductResponse>> updateProduct(@RequestBody ProductRequest productRequest) {
-        return ResponseEntity.ok(APIResponse.success(productService.updateProduct(productRequest)));
+    @PutMapping("/{id}")
+    public ResponseEntity<APIResponse<ProductResponse>> updateProduct(@PathVariable String id, @RequestBody ProductRequest productRequest) {
+        return ResponseEntity.ok(APIResponse.success(productService.updateProduct(id, productRequest)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<APIResponse<String>> deleteProduct(String id) {
+    public ResponseEntity<APIResponse<String>> deleteProduct(@PathVariable String id) {
         return ResponseEntity.ok(APIResponse.success(productService.deleteProduct(id)));
     }
 }

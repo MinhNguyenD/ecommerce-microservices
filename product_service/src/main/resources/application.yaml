@@ -3,5 +3,14 @@ server:
   servlet:
     context-path: /product
 spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: root
+    url: "jdbc:postgresql://localhost:5432/product_service"
   application:
     name: product_service
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
