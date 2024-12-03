@@ -1,14 +1,17 @@
 package com.ecommerce.product_service.service.impl;
 
 import com.ecommerce.product_service.dto.request.ProductRequest;
+import com.ecommerce.product_service.dto.response.InventoryResponse;
 import com.ecommerce.product_service.dto.response.PageResponse;
 import com.ecommerce.product_service.dto.response.ProductResponse;
 import com.ecommerce.product_service.entity.Category;
+import com.ecommerce.product_service.entity.Inventory;
 import com.ecommerce.product_service.entity.Product;
 import com.ecommerce.product_service.exception.AppException;
 import com.ecommerce.product_service.exception.ErrorCode;
 import com.ecommerce.product_service.mapper.ProductMapper;
 import com.ecommerce.product_service.repository.CategoryRepository;
+import com.ecommerce.product_service.repository.InventoryRepository;
 import com.ecommerce.product_service.repository.ProductRepository;
 import com.ecommerce.product_service.service.ProductService;
 import lombok.AccessLevel;
@@ -65,6 +68,11 @@ public class ProductServiceImpl implements ProductService {
             categories.add(category);
         }
         product.setCategories(categories);
+        Inventory inventory = Inventory.builder()
+                .quantity(productRequest.getQuantity())
+                .product(product)
+                .build();
+        product.setInventory(inventory);
         productRepository.save(product);
         return productMapper.toProductResponse(product);
     }
@@ -79,6 +87,12 @@ public class ProductServiceImpl implements ProductService {
             categories.add(category);
         }
         product.setCategories(categories);
+        Inventory inventory = product.getInventory();
+        if(inventory == null){
+            throw new AppException(ErrorCode.INVENTORY_NOT_EXISTED);
+        }
+        inventory.setQuantity(productRequest.getQuantity());
+        product.setInventory(inventory);
         productMapper.updateProduct(product, productRequest);
         productRepository.save(product);
         return productMapper.toProductResponse(product);
