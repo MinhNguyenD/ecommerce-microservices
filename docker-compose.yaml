@@ -1,0 +1,34 @@
+version: '1'
+
+services:
+  auth-service:
+    container_name: auth-service
+    # Specify the build context for the frontend
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+      
+    # Map the host port to the container port
+    ports: 
+      - "8080:8080"
+    
+    networks:
+      - ecommerce-network
+
+  product-service:
+    container_name: product-service
+    # Specify the build context for the backend
+    build:
+      context: ./product_service
+      dockerfile: Dockerfile
+    # Map the host port to the container port
+    ports:
+      - "8081:8081"
+
+    networks:
+      - ecommerce-network
+
+networks: 
+  ecommerce-network:
+    driver: bridge
+    
